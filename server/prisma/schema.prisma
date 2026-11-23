@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  displayName  String
+  avatar       String   @default("mars")
+  status       String   @default("offline") // online | away | busy | offline
+  customStatus String?
+  isGuest      Boolean  @default(false)
+  isBot        Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  channelMemberships ChannelMember[]
+  messages           Message[]
+  conversations1     Conversation[]  @relation("User1Conversations")
+  conversations2     Conversation[]  @relation("User2Conversations")
+  lastReads          LastRead[]
+}
+
+model Channel {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isPrivate   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members   ChannelMember[]
+  messages  Message[]
+  lastReads LastRead[]
+}
+
+model ChannelMember {
+  id        String   @id @default(cuid())
+  channelId String
+  userId    String
+  role      String   @default("member") // owner | admin | member
+  joinedAt  DateTime @default(now())
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user1     User       @relation("User1Conversations", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User       @relation("User2Conversations", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages  Message[]
+  lastReads LastRead[]
+
+  @@unique([user1Id, user2Id])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  content        String
+  type           String   @default("text") // text | code | image | file | voice
+  fileUrl        String?
+  fileName       String?
+  fileSize       Int?
+  mimeType       String?
+  channelId      String?
+  conversationId String?
+  senderId       String
+  replyToId      String?
+  isEdited       Boolean  @default(false)
+  isDeleted      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  channel      Channel?      @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo      Message?      @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      Message[]     @relation("MessageReplies")
+
+  @@index([channelId, createdAt])
+  @@index([conversationId, createdAt])
+}
+
+model LastRead {
+  id             String    @id @default(cuid())
+  userId         String
+  channelId      String?
+  conversationId String?
+  lastReadAt     DateTime  @default(now())
+  lastMessageId  String?
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel      Channel?      @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, channelId])
+  @@unique([userId, conversationId])
+}
+

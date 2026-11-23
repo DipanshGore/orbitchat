@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-secondary: var(--secondary);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+
+  --font-heading: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+}
+
+:root {
+  --bg: #F6F3EE;
+  --surface: #FFFFFF;
+  --surface-2: #EFEAE2;
+  --text: #1C1917;
+  --muted: #57534E;
+  --border: #DDD5C8;
+  --accent: #C2410C;
+  --accent-contrast: #FFFFFF;
+  --secondary: #0F766E;
+  --success: #15803D;
+  --danger: #B91C1C;
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(221, 213, 200, 0.65);
+}
+
+.dark {
+  --bg: #0A0F1C;
+  --surface: #121A2B;
+  --surface-2: #1A2438;
+  --text: #EAF0FF;
+  --muted: #9AA8C7;
+  --border: #26324A;
+  --accent: #FF8A4C;
+  --accent-contrast: #1A0B02;
+  --secondary: #22D3EE;
+  --success: #4ADE80;
+  --danger: #F87171;
+  --glass-bg: rgba(18, 26, 43, 0.78);
+  --glass-border: rgba(38, 50, 74, 0.65);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Floating Glass Layer */
+.glass-panel {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+}
+
+/* Opaque fallback for reduced transparency / contrast */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel {
+    background-color: var(--surface) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid var(--border) !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .glass-panel {
+    background-color: var(--surface) !important;
+    backdrop-filter: none !important;
+    border: 2px solid var(--border) !important;
+  }
+}
+
+/* Asymmetric message bubbles */
+.bubble-sent {
+  border-radius: 20px 20px 4px 20px;
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.bubble-received {
+  border-radius: 20px 20px 20px 4px;
+  background-color: var(--surface-2);
+  color: var(--text);
+}
+
+/* Cosmic background animation */
+.cosmic-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 15% 20%, rgba(194, 65, 12, 0.04) 0%, transparent 40%),
+              radial-gradient(circle at 85% 80%, rgba(15, 118, 110, 0.04) 0%, transparent 40%);
+}
+
+.dark .cosmic-bg {
+  background: radial-gradient(circle at 15% 20%, rgba(255, 138, 76, 0.06) 0%, transparent 45%),
+              radial-gradient(circle at 85% 80%, rgba(34, 211, 238, 0.05) 0%, transparent 45%),
+              radial-gradient(circle at 50% 50%, rgba(18, 26, 43, 0.8) 0%, transparent 100%);
+}
+
+@keyframes slowOrbitPulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cosmic-pulse {
+    animation: slowOrbitPulse 18s ease-in-out infinite;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+

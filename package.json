@@ -1,0 +1,12 @@
+{
+  "name": "orbitchat-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm --dir server dev\" \"pnpm --dir client dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
+
