@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Hash, User, MessageSquare, X, ArrowRight, Loader2 } from "lucide-react";
+import { Search, Hash, User, MessageSquare, X, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { useChatStore } from "../../store/chatStore";
 import { apiFetch } from "../../lib/api";
 import { AvatarRing } from "./AvatarRing";
@@ -100,11 +100,28 @@ export function CommandPalette() {
     results.channels.length > 0 || results.people.length > 0 || results.messages.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="glass-panel w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[80dvh]">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-10 sm:pt-20 p-2 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
+      onClick={() => setCommandPaletteOpen(false)}
+    >
+      <div
+        className="glass-panel w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[85dvh]"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3 border-b border-border/70 gap-3">
-          <Search className="w-5 h-5 text-muted shrink-0" />
+        <div className="flex items-center px-3 sm:px-4 py-3 border-b border-border/70 gap-2 sm:gap-3">
+          {/* Mobile Back Button (always visible on mobile devices to easily exit) */}
+          <button
+            type="button"
+            onClick={() => setCommandPaletteOpen(false)}
+            className="p-1.5 -ml-1 text-muted hover:text-text hover:bg-surface-2 rounded-xl transition-colors md:hidden min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0"
+            title="Back / Close search"
+            aria-label="Back / Close search"
+          >
+            <ArrowLeft className="w-5 h-5 text-accent" />
+          </button>
+
+          <Search className="w-5 h-5 text-muted shrink-0 hidden md:block" />
           <input
             ref={inputRef}
             type="text"
@@ -119,14 +136,28 @@ export function CommandPalette() {
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="text-muted hover:text-text p-1 min-w-[32px] min-h-[32px] flex items-center justify-center"
+              className="text-muted hover:text-text p-1 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-surface-2"
+              title="Clear search text"
             >
               <X className="w-4 h-4" />
             </button>
           ) : (
-            <kbd className="px-2 py-0.5 text-[10px] font-mono bg-surface-2 border border-border rounded text-muted">
-              ESC
-            </kbd>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Desktop ESC Badge */}
+              <kbd className="hidden md:inline-block px-2 py-0.5 text-[10px] font-mono bg-surface-2 border border-border rounded text-muted">
+                ESC
+              </kbd>
+              {/* Mobile Close Button */}
+              <button
+                type="button"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="md:hidden text-muted hover:text-text p-1 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-surface-2"
+                title="Close"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           )}
         </div>
 
@@ -246,6 +277,18 @@ export function CommandPalette() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-4 py-2.5 border-t border-border/70 bg-surface/60 flex items-center justify-between text-xs text-muted">
+          <span className="text-[11px]">Navigate with arrow keys or tap</span>
+          <button
+            type="button"
+            onClick={() => setCommandPaletteOpen(false)}
+            className="px-2.5 py-1 rounded-lg bg-surface-2 hover:bg-surface text-text font-semibold text-xs transition-colors min-h-[32px] flex items-center"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

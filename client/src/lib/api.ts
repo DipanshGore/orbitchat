@@ -29,10 +29,18 @@ export async function apiFetch<T = any>(
     headers["Content-Type"] = "application/json";
   }
 
+  // Inject Bearer token from localStorage for seamless cross-origin auth
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("orbit_token");
+    if (token && !headers["Authorization"]) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
   const response = await fetch(url, {
     ...options,
     headers,
-    credentials: "include", // send httpOnly cookies
+    credentials: "include", // send httpOnly cookies when supported
   });
 
   if (!response.ok) {

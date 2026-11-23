@@ -55,10 +55,12 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
     }
 
     const { username, email, password, displayName, avatar } = parse.data;
+    const cleanUsername = username.trim().toLowerCase();
+    const cleanEmail = email.trim().toLowerCase();
 
     const existing = await db.user.findFirst({
       where: {
-        OR: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }],
+        OR: [{ email: cleanEmail }, { username: cleanUsername }],
       },
     });
 
@@ -70,9 +72,9 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await db.user.create({
       data: {
-        email: email.toLowerCase(),
-        username: username.toLowerCase(),
-        displayName,
+        email: cleanEmail,
+        username: cleanUsername,
+        displayName: displayName.trim(),
         avatar: avatar || "mars",
         passwordHash,
         status: "online",
@@ -95,13 +97,39 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
     // Auto-join public channels
     const publicChannels = await db.channel.findMany({ where: { isPrivate: false } });
     for (const channel of publicChannels) {
-      await db.channelMember.create({
-        data: {
+      await db.channelMember.upsert({
+        where: { channelId_userId: { channelId: channel.id, userId: user.id } },
+        update: {},
+        create: {
           channelId: channel.id,
           userId: user.id,
           role: "member",
         },
       });
+    }
+
+    // Auto-create initial OrbitBot DM conversation
+    try {
+      const botUser = await db.user.findFirst({ where: { isBot: true } });
+      if (botUser) {
+        const u1 = user.id < botUser.id ? user.id : botUser.id;
+        const u2 = user.id < botUser.id ? botUser.id : user.id;
+        const botConv = await db.conversation.upsert({
+          where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
+          update: {},
+          create: { user1Id: u1, user2Id: u2 },
+        });
+        await db.message.create({
+          data: {
+            conversationId: botConv.id,
+            senderId: botUser.id,
+            content: `Greetings, ${user.displayName}! I am OrbitBot AI, your interactive assistant aboard OrbitChat Station. Feel free to ask me anything or chat anytime! 🛰️`,
+            type: "text",
+          },
+        });
+      }
+    } catch (botErr) {
+      console.warn("Could not auto-create bot conversation:", botErr);
     }
 
     const token = await issueSession(res, user);
@@ -122,7 +150,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     }
 
     const { identifier, password } = parse.data;
-    const lowerIdent = identifier.toLowerCase();
+    const lowerIdent = identifier.trim().toLowerCase();
 
     const user = await db.user.findFirst({
       where: {

@@ -75,7 +75,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await login(identifier, password);
+      await login(identifier.trim(), password);
       router.push("/");
     } catch (err: any) {
       setError(err.message || "Failed to establish orbital link.");
@@ -91,10 +91,10 @@ export default function LoginPage() {
 
     try {
       await register({
-        username,
-        email,
+        username: username.trim().toLowerCase(),
+        email: email.trim().toLowerCase(),
         password,
-        displayName: displayName.trim() || username,
+        displayName: displayName.trim() || username.trim(),
       });
       router.push("/");
     } catch (err: any) {

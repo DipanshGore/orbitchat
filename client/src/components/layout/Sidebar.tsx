@@ -20,6 +20,7 @@ import { BrandLogo } from "./BrandLogo";
 import { AvatarRing } from "./AvatarRing";
 import { ThemeToggle } from "./ThemeToggle";
 import { formatTimeAgo } from "../../lib/utils";
+import { apiFetch } from "../../lib/api";
 
 export function Sidebar({ isMobileSheet = false }: { isMobileSheet?: boolean }) {
   const pathname = usePathname();
@@ -28,6 +29,7 @@ export function Sidebar({ isMobileSheet = false }: { isMobileSheet?: boolean }) 
   const {
     channels,
     conversations,
+    fetchConversations,
     setCommandPaletteOpen,
     setCreateChannelOpen,
     setNewDmOpen,
@@ -43,6 +45,16 @@ export function Sidebar({ isMobileSheet = false }: { isMobileSheet?: boolean }) 
   const handleLogout = async () => {
     await logout();
     router.push("/login");
+  };
+
+  const handleOpenOrbitBot = async () => {
+    try {
+      const res = await apiFetch<{ conversationId: string }>("/api/conversations/bot");
+      await fetchConversations();
+      router.push(`/dm/${res.conversationId}`);
+    } catch (err) {
+      console.error("Failed to open OrbitBot DM:", err);
+    }
   };
 
   return (
@@ -116,6 +128,35 @@ export function Sidebar({ isMobileSheet = false }: { isMobileSheet?: boolean }) 
             Orbits
           </button>
         </div>
+      </div>
+
+      {/* OrbitBot AI 1-Click Copilot Launcher */}
+      <div className="px-3 pt-2">
+        <button
+          type="button"
+          onClick={handleOpenOrbitBot}
+          className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-gradient-to-r from-accent/20 via-surface-2 to-secondary/15 border border-accent/40 hover:border-accent text-left transition-all group min-h-[52px] shadow-sm active:scale-[0.99]"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-accent text-accent-contrast flex items-center justify-center shrink-0 shadow-md text-base">
+              🤖
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-text group-hover:text-accent transition-colors">
+                  OrbitBot AI
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-accent/20 text-accent font-bold text-[9px] uppercase tracking-wider">
+                  Copilot
+                </span>
+              </div>
+              <span className="text-[10px] text-muted truncate block">
+                Instant AI chat & orbital assistance
+              </span>
+            </div>
+          </div>
+          <Sparkles className="w-4 h-4 text-accent shrink-0 animate-pulse group-hover:scale-110 transition-transform" />
+        </button>
       </div>
 
       {/* Scrollable Channels & DMs List */}

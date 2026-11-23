@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { initSocketServer } from "./socket.js";
+import { ensureDatabaseSeeded } from "./lib/seed.js";
 
 import authRoutes from "./routes/auth.js";
 import channelsRoutes from "./routes/channels.js";
@@ -88,8 +89,11 @@ const server = http.createServer(app);
 // Initialize Socket.io
 initSocketServer(server, CLIENT_URL);
 
-server.listen(PORT, () => {
-  console.log(`🚀 OrbitChat Server operational on port ${PORT}`);
-  console.log(`📡 Linked to Client URL: ${CLIENT_URL}`);
+// Seed database on startup and listen
+ensureDatabaseSeeded().finally(() => {
+  server.listen(PORT, () => {
+    console.log(`🚀 OrbitChat Server operational on port ${PORT}`);
+    console.log(`📡 Linked to Client URL: ${CLIENT_URL}`);
+  });
 });
 

@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "../lib/db.js";
 import { requireAuth } from "../middleware/auth.js";
@@ -14,6 +15,55 @@ const startDmSchema = z.object({
 function getSortedPair(idA: string, idB: string): [string, string] {
   return idA < idB ? [idA, idB] : [idB, idA];
 }
+
+// GET /api/conversations/bot - Instant 1-click access to OrbitBot AI conversation
+router.get("/bot", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const currentUserId = req.user!.id;
+    let botUser = await db.user.findFirst({ where: { isBot: true } });
+
+    if (!botUser) {
+      const passwordHash = await bcrypt.hash("password123", 10);
+      botUser = await db.user.create({
+        data: {
+          email: "bot@orbit.chat",
+          username: "orbitbot",
+          displayName: "OrbitBot AI",
+          passwordHash,
+          avatar: "sun",
+          status: "online",
+          customStatus: "Orbital Intelligence Assistant 🤖",
+          isBot: true,
+          isGuest: false,
+        },
+      });
+    }
+
+    const [u1, u2] = getSortedPair(currentUserId, botUser.id);
+    let conv = await db.conversation.findUnique({
+      where: { user1Id_user2Id: { user1Id: u1, user2Id: u2 } },
+    });
+
+    if (!conv) {
+      conv = await db.conversation.create({
+        data: { user1Id: u1, user2Id: u2 },
+      });
+      await db.message.create({
+        data: {
+          conversationId: conv.id,
+          senderId: botUser.id,
+          content: `Greetings, ${req.user!.displayName}! I am OrbitBot AI, your interactive assistant aboard OrbitChat Station. Feel free to ask me anything or chat anytime! 🛰️`,
+          type: "text",
+        },
+      });
+    }
+
+    res.json({ conversationId: conv.id });
+  } catch (error) {
+    console.error("Bot conversation error:", error);
+    res.status(500).json({ error: "Failed to open OrbitBot conversation" });
+  }
+});
 
 // GET /api/conversations - List all DMs with otherUser and unread count
 router.get("/", async (req: Request, res: Response): Promise<void> => {

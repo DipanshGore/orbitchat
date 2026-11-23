@@ -5,7 +5,9 @@ let socket: Socket | null = null;
 
 export function getSocket(): Socket {
   if (!socket) {
+    const token = typeof window !== "undefined" ? localStorage.getItem("orbit_token") : null;
     socket = io(API_BASE_URL, {
+      auth: { token },
       withCredentials: true,
       autoConnect: false,
       reconnection: true,
@@ -21,6 +23,10 @@ export function getSocket(): Socket {
 
 export function connectSocket() {
   const s = getSocket();
+  const token = typeof window !== "undefined" ? localStorage.getItem("orbit_token") : null;
+  if (token) {
+    s.auth = { token };
+  }
   if (!s.connected) {
     s.connect();
   }

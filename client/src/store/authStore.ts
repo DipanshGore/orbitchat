@@ -75,30 +75,39 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   login: async (identifier, password) => {
-    const res = await apiFetch<{ user: UserSummary }>("/api/auth/login", {
+    const res = await apiFetch<{ user: UserSummary; token?: string }>("/api/auth/login", {
       method: "POST",
-      body: JSON.stringify({ identifier, password }),
+      body: JSON.stringify({ identifier: identifier.trim(), password }),
     });
+    if (typeof window !== "undefined" && res.token) {
+      localStorage.setItem("orbit_token", res.token);
+    }
     set({ user: res.user });
     connectSocket();
     return res.user;
   },
 
   register: async (payload) => {
-    const res = await apiFetch<{ user: UserSummary }>("/api/auth/register", {
+    const res = await apiFetch<{ user: UserSummary; token?: string }>("/api/auth/register", {
       method: "POST",
       body: JSON.stringify(payload),
     });
+    if (typeof window !== "undefined" && res.token) {
+      localStorage.setItem("orbit_token", res.token);
+    }
     set({ user: res.user });
     connectSocket();
     return res.user;
   },
 
   quickGuest: async (displayName) => {
-    const res = await apiFetch<{ user: UserSummary }>("/api/auth/guest", {
+    const res = await apiFetch<{ user: UserSummary; token?: string }>("/api/auth/guest", {
       method: "POST",
       body: JSON.stringify({ displayName }),
     });
+    if (typeof window !== "undefined" && res.token) {
+      localStorage.setItem("orbit_token", res.token);
+    }
     set({ user: res.user });
     connectSocket();
     return res.user;
@@ -108,6 +117,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       await apiFetch("/api/auth/logout", { method: "POST" });
     } catch {}
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("orbit_token");
+    }
     disconnectSocket();
     set({ user: null });
   },
