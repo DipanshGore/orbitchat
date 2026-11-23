@@ -379,8 +379,8 @@ export default function LoginPage() {
       )}
 
       {/* DEMO ACCOUNTS DIRECT BUTTONS */}
-      <div className="mt-8 pt-5 border-t border-border/70">
-        <span className="block text-[11px] font-bold uppercase tracking-wider text-muted mb-2.5 text-center">
+      <div className="mt-5 pt-3 sm:mt-8 sm:pt-5 border-t border-border/70">
+        <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted mb-2 text-center">
           One-Click Mission Crew Sign-In
         </span>
         <div className="grid grid-cols-2 gap-2">
@@ -390,7 +390,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => handleQuickLogin(demo.username)}
               disabled={isSubmitting}
-              className="p-2.5 rounded-xl bg-surface-2 border border-border hover:border-accent hover:bg-surface text-left transition-all flex flex-col min-h-[52px] group"
+              className="p-2 sm:p-2.5 rounded-xl bg-surface-2 border border-border hover:border-accent hover:bg-surface text-left transition-all flex flex-col min-h-[46px] sm:min-h-[52px] group"
             >
               <span className="font-bold text-xs text-text group-hover:text-accent transition-colors truncate">
                 {demo.displayName}
@@ -404,14 +404,14 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="relative min-h-dvh flex flex-col justify-between p-4 sm:p-6 overflow-y-auto">
+    <div className="relative min-h-dvh flex flex-col justify-between p-3 sm:p-6 overflow-y-auto pb-12 sm:pb-4">
       {/* Top Bar with Brand & Theme Toggle */}
-      <header className="flex items-center justify-between max-w-6xl w-full mx-auto pb-4">
-        <div className="flex items-center gap-3">
-          <BrandLogo size={36} />
+      <header className="flex items-center justify-between max-w-6xl w-full mx-auto pb-2 sm:pb-4">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <BrandLogo size={32} />
           <div>
-            <span className="font-heading font-black text-lg text-text">OrbitChat</span>
-            <span className="text-[10px] text-muted block uppercase tracking-wider font-semibold">
+            <span className="font-heading font-black text-base sm:text-lg text-text">OrbitChat</span>
+            <span className="text-[9px] sm:text-[10px] text-muted block uppercase tracking-wider font-semibold">
               Deep Space Communications
             </span>
           </div>
@@ -422,7 +422,7 @@ export default function LoginPage() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 flex items-center justify-center my-auto py-6">
+      <main className="flex-1 flex items-center justify-center my-auto py-2 sm:py-6">
         {/* DESKTOP SPLIT CARD (md: and larger) */}
         <div className="hidden md:grid glass-panel w-full max-w-4xl grid-cols-2 shadow-2xl overflow-hidden border border-border/70">
           {/* Left Column: Animated Orbital Illustration */}
@@ -473,37 +473,37 @@ export default function LoginPage() {
         <div className="md:hidden w-full max-w-md">
           {mobileStep === "options" ? (
             /* MOBILE STEP 1: OPTIONS SELECTION MENU */
-            <div className="glass-panel p-6 shadow-2xl border border-border/70 space-y-6 animate-in fade-in duration-200">
+            <div className="glass-panel p-4 sm:p-6 shadow-2xl border border-border/70 space-y-3 sm:space-y-5 animate-in fade-in duration-200">
               {/* Header inside mobile card */}
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/15 text-accent text-xs font-bold uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5" /> Orbit Station Relay
+              <div className="text-center space-y-1 sm:space-y-1.5">
+                <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-accent/15 text-accent text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3" /> Orbit Station Relay
                 </div>
-                <h1 className="font-heading text-2xl font-black text-text">
+                <h1 className="font-heading text-xl sm:text-2xl font-black text-text">
                   Welcome Aboard
                 </h1>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-muted leading-relaxed">
                   Select an option below to enter your orbital credentials or connect instantly.
                 </p>
               </div>
 
               {/* 3 Prominent Option Cards */}
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {/* 1. Sign In Option */}
                 <button
                   type="button"
                   onClick={() => selectOption("signin")}
-                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-surface-2/80 hover:bg-surface border border-border hover:border-accent transition-all text-left group min-h-[64px] shadow-sm active:scale-[0.99]"
+                  className="w-full flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-surface-2/80 hover:bg-surface border border-border hover:border-accent transition-all text-left group min-h-[52px] sm:min-h-[64px] shadow-sm active:scale-[0.99]"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-xl bg-accent/15 text-accent flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <KeyRound className="w-5 h-5" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-accent/15 text-accent flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <KeyRound className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <span className="font-bold text-sm text-text block group-hover:text-accent transition-colors">
+                      <span className="font-bold text-xs sm:text-sm text-text block group-hover:text-accent transition-colors">
                         Sign In
                       </span>
-                      <span className="text-xs text-muted block">
+                      <span className="text-[10px] sm:text-xs text-muted block">
                         Enter existing callsign and passcode
                       </span>
                     </div>
@@ -515,17 +515,17 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => selectOption("register")}
-                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-surface-2/80 hover:bg-surface border border-border hover:border-accent transition-all text-left group min-h-[64px] shadow-sm active:scale-[0.99]"
+                  className="w-full flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-surface-2/80 hover:bg-surface border border-border hover:border-accent transition-all text-left group min-h-[52px] sm:min-h-[64px] shadow-sm active:scale-[0.99]"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <UserPlus className="w-5 h-5" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <UserPlus className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <span className="font-bold text-sm text-text block group-hover:text-accent transition-colors">
+                      <span className="font-bold text-xs sm:text-sm text-text block group-hover:text-accent transition-colors">
                         Register
                       </span>
-                      <span className="text-xs text-muted block">
+                      <span className="text-[10px] sm:text-xs text-muted block">
                         Create a new crew member account
                       </span>
                     </div>
@@ -537,17 +537,17 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => selectOption("guest")}
-                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-surface-2/80 hover:bg-surface border border-border hover:border-secondary transition-all text-left group min-h-[64px] shadow-sm active:scale-[0.99]"
+                  className="w-full flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-surface-2/80 hover:bg-surface border border-border hover:border-secondary transition-all text-left group min-h-[52px] sm:min-h-[64px] shadow-sm active:scale-[0.99]"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      <Sparkles className="w-5 h-5" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <span className="font-bold text-sm text-text block group-hover:text-secondary transition-colors">
+                      <span className="font-bold text-xs sm:text-sm text-text block group-hover:text-secondary transition-colors">
                         Guest Link
                       </span>
-                      <span className="text-xs text-muted block">
+                      <span className="text-[10px] sm:text-xs text-muted block">
                         Quick-join with temporary access
                       </span>
                     </div>
@@ -557,8 +557,8 @@ export default function LoginPage() {
               </div>
 
               {/* DEMO ACCOUNTS ON MOBILE OPTIONS SCREEN */}
-              <div className="pt-4 border-t border-border/70">
-                <span className="block text-[11px] font-bold uppercase tracking-wider text-muted mb-2.5 text-center">
+              <div className="pt-3 sm:pt-4 border-t border-border/70">
+                <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted mb-2 text-center">
                   One-Click Demo Crew Sign-In
                 </span>
                 <div className="grid grid-cols-2 gap-2">
@@ -568,7 +568,7 @@ export default function LoginPage() {
                       type="button"
                       onClick={() => handleQuickLogin(demo.username)}
                       disabled={isSubmitting}
-                      className="p-2.5 rounded-xl bg-surface-2 border border-border hover:border-accent hover:bg-surface text-left transition-all flex flex-col min-h-[52px] group"
+                      className="p-2 sm:p-2.5 rounded-xl bg-surface-2 border border-border hover:border-accent hover:bg-surface text-left transition-all flex flex-col min-h-[46px] sm:min-h-[52px] group"
                     >
                       <span className="font-bold text-xs text-text group-hover:text-accent transition-colors truncate">
                         {demo.displayName}
@@ -581,14 +581,14 @@ export default function LoginPage() {
             </div>
           ) : (
             /* MOBILE STEP 2: CREDENTIAL DETAILS PAGE */
-            <div className="glass-panel p-6 shadow-2xl border border-border/70 animate-in fade-in duration-200">
+            <div className="glass-panel p-4 sm:p-6 shadow-2xl border border-border/70 animate-in fade-in duration-200">
               {renderCredentialForms(true)}
             </div>
           )}
         </div>
       </main>
 
-      <footer className="text-center text-xs text-muted py-2">
+      <footer className="text-center text-[10px] sm:text-xs text-muted py-1.5 sm:py-2">
         OrbitChat &copy; 2026 Deep Space Real-Time Communications.
       </footer>
     </div>
