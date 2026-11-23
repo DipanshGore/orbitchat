@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "../lib/db.js";
 import { signSessionToken, serializeCookie, clearCookieString } from "../lib/jwt.js";
 import { requireAuth } from "../middleware/auth.js";
+import { ensureDatabaseSeeded } from "../lib/seed.js";
 
 const router = Router();
 
@@ -29,6 +30,16 @@ const profileUpdateSchema = z.object({
   avatar: z.string().optional(),
   status: z.enum(["online", "away", "busy", "offline"]).optional(),
   customStatus: z.string().max(100).nullable().optional(),
+});
+
+// GET /api/auth/seed - Public database seed trigger
+router.get("/seed", async (_req: Request, res: Response): Promise<void> => {
+  try {
+    await ensureDatabaseSeeded();
+    res.json({ success: true, message: "OrbitChat database seeded successfully with OrbitBot and Demo accounts!" });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || "Failed to seed database" });
+  }
 });
 
 // Helper to set session cookie

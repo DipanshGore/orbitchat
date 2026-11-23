@@ -11,7 +11,7 @@ export async function ensureDatabaseSeeded(): Promise<void> {
       console.log("🤖 Seeding OrbitBot AI user...");
       bot = await db.user.upsert({
         where: { email: "bot@orbit.chat" },
-        update: { isBot: true, status: "online" },
+        update: { isBot: true, status: "online", passwordHash },
         create: {
           email: "bot@orbit.chat",
           username: "orbitbot",
@@ -69,8 +69,10 @@ export async function ensureDatabaseSeeded(): Promise<void> {
         update: {
           username: crew.username,
           displayName: crew.displayName,
+          passwordHash,
           avatar: crew.avatar,
           customStatus: crew.customStatus,
+          status: crew.status,
         },
         create: {
           email: crew.email,

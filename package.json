@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"pnpm --dir server dev\" \"pnpm --dir client dev\""
+    "dev": "concurrently \"pnpm --dir server dev\" \"pnpm --dir client dev\"",
+    "build": "cd server && npm install && npm run build && npx prisma db push",
+    "start": "cd server && npm start"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

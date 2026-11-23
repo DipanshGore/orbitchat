@@ -64,7 +64,12 @@ app.use(
 
 // Health check
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", app: "OrbitChat Server", timestamp: new Date().toISOString() });
+  res.json({
+    status: "ok",
+    app: "OrbitChat Server",
+    version: "2.6.2",
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // Mount Routes
